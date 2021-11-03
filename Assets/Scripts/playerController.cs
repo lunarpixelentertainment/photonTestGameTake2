@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-public class playerController : MonoBehaviour
+public class playerController : MonoBehaviourPunCallbacks
 {
     [HideInInspector]
     public int id;
@@ -19,6 +19,21 @@ public class playerController : MonoBehaviour
     [Header("Components")]
     public Rigidbody rb;
     public Player photonPlayer;
+
+    [PunRPC]
+    public void Initilise(Player player)
+	{
+        photonPlayer = player;
+        id = player.ActorNumber;
+
+        gameManager.instance.players[id - 1] = this;
+
+        // Give First Player hat
+         if (!photonView.IsMine)
+		{
+            rb.isKinematic = true;
+		}
+	}
 
 	private void Update()
 	{
